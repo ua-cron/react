@@ -1,10 +1,7 @@
 import React from 'react';
 
 import { Mode } from '@sbzen/cron-core';
-
-export type CronBaseProps = {
-  cssClassPrefix?: string;
-}
+import { CronBaseProps } from './cron-base-props.type';
 
 export abstract class CronBaseComponent<P extends { session: string } & CronBaseProps> extends React.Component<P> {
   protected getCssClassPrefix() {

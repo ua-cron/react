@@ -2,15 +2,11 @@ import React from 'react';
 import { Mode } from '@sbzen/cron-core';
 
 import { genClassName } from './../helpers';
+import { SharedProps } from './props.type';
 
 type Props = {
-  cssClassPrefix?: string;
-  checked?: boolean;
-  disabled?: boolean;
-  onSelect: () => void;
   label: string;
-  segmentId: string;
-}
+} & SharedProps;
 
 export const SimpleEvery = ({
   cssClassPrefix = '',

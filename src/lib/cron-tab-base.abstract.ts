@@ -1,6 +1,7 @@
 import { Segment, CronUnixUIService, CronQuartzUIService } from '@sbzen/cron-core';
 
-import { CronBaseComponent, CronBaseProps } from './cron-base.abstract';
+import { CronBaseComponent } from './cron-base.abstract';
+import { CronBaseProps } from './cron-base-props.type';
 import { localization } from './cron-localization';
 
 export type CronTabBaseProps = {

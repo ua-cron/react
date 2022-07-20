@@ -2,7 +2,7 @@ import React from 'react';
 import { Type, CronQuartzUIService, CronUnixUIService } from '@sbzen/cron-core';
 
 import { localization, CronLocalization, DeepPartial } from './cron-localization';
-import { CronBaseProps } from './cron-base.abstract';
+import { CronBaseProps } from './cron-base-props.type';
 import { CronState } from './cron-state.type';
 import { genClassName } from './helpers';
 

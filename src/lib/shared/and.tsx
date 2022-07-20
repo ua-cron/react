@@ -2,13 +2,10 @@ import React from 'react';
 import { Mode } from '@sbzen/cron-core';
 
 import { genClassName } from './../helpers';
+import { SharedProps } from './props.type';
 
 type Props = {
-  cssClassPrefix?: string;
-  checked?: boolean;
-  disabled?: boolean;
   disabledControls?: boolean;
-  onSelect: () => void;
   onValueChange: (value: string) => void;
   isValueSelected: (value: string) => boolean;
   options: {
@@ -17,8 +14,7 @@ type Props = {
   }[],
   label: string;
   gridSize?: string;
-  segmentId: string;
-}
+} & SharedProps;
 
 export const SimpleAnd = ({
   cssClassPrefix = '',
