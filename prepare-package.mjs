@@ -14,6 +14,8 @@ const {
   license,
   repository,
   sideEffects,
+  dependencies,
+  peerDependencies,
   bugs
 } = JSON.parse(packageString);
 
@@ -23,6 +25,8 @@ const libPackage = JSON.stringify({
   author,
   license,
   repository,
+  dependencies,
+  peerDependencies,
   sideEffects,
   bugs,
   main: 'index.js'

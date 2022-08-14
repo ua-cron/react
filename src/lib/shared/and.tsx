@@ -9,7 +9,7 @@ type Props = {
   onValueChange: (value: string) => void;
   isValueSelected: (value: string) => boolean;
   options: {
-    label: string|number,
+    label: string,
     value: string
   }[],
   label: string;
@@ -26,7 +26,7 @@ export const SimpleAnd = ({
   onSelect,
   onValueChange,
   isValueSelected,
-  gridSize = 'col-1',
+  gridSize = 'col-2 col-md-1',
   segmentId
 }: Props) => (
   <div className={genClassName(cssClassPrefix, ['form-group'], ['c-and', 'c-segment'])}>

@@ -1,30 +1,30 @@
 import React from 'react';
 import { Mode } from '@sbzen/cron-core';
 
+import { CronBaseProps } from './../../../cron-base-props.type';
 import { genClassName } from '../../../helpers';
 
 type Props = {
-  cssClassPrefix?: string;
-  checked?: boolean;
-  disabled?: boolean;
-  disabledControls?: boolean;
-  onSelect: () => void;
+  checked?: boolean,
+  disabled?: boolean,
+  disabledControls?: boolean,
+  onSelect: () => void,
   primaryOptions: {
     label: string|number,
     value: string
   }[];
-  primaryValue: string;
-  onPrimaryValueChange: (value: string) => void;
+  primaryValue: string,
+  onPrimaryValueChange: (value: string) => void,
   secondaryOptions: {
     label: string|number,
     value: string
-  }[];
-  secondaryValue: string;
-  onSecondaryValueChange: (value: string) => void;
-  label1: string;
-  label2: string;
-  segmentId: string;
-}
+  }[],
+  secondaryValue: string,
+  onSecondaryValueChange: (value: string) => void,
+  label1: string,
+  label2: string,
+  segmentId: string
+} & CronBaseProps;
 
 export const SimpleIncrement = ({
   cssClassPrefix = '',

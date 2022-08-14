@@ -7,13 +7,13 @@ import { SharedProps } from './props.type';
 type Props = {
   disabledControls?: boolean;
   primaryOptions: {
-    label: string|number,
+    label: string,
     value: string
   }[];
   primaryValue: string;
   onPrimaryValueChange: (value: string) => void;
   secondaryOptions: {
-    label: string|number,
+    label: string,
     value: string
   }[];
   secondaryValue: string;

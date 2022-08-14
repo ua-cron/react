@@ -2,85 +2,87 @@ import React from 'react';
 import { Segment, Mode, Type, getList } from '@sbzen/cron-core';
 
 import { SimpleEvery, SimpleAnd, SimpleRange } from './../../../shared';
-import { CronTabBaseProps } from './../../../cron-tab-base.abstract';
-import { QuartzTabSingleSegmentComponent } from './../tab-single-segment.abstract';
-import { SimpleIncrement } from './../shared';
+import { genId, getCssClassPrefix } from './../../../helpers';
+import { SimpleIncrement, CronQuartzTabProps } from './../shared';
 
-export class QuartzCronMinute extends QuartzTabSingleSegmentComponent {
-  private readonly uiService = this.getQuartzCron();
-  private readonly uiServiceApi = this.uiService.getApi<Type.MINUTES>(Type.MINUTES);
-  private readonly minuteCodes = getList(Segment.minutes, true);
-  private readonly minutesList = getList(Segment.minutes);
+export const QuartzCronMinute = ({
+  service,
+  session,
+  localization,
+  cssClassPrefix
+}: CronQuartzTabProps) => {
+  const { every, increment, and, range } = localization.quartz.minute;
+  const classPrefix = getCssClassPrefix(cssClassPrefix);
+  const api = service.getApi(Type.MINUTES);
+  const minutesList = getList(Segment.minutes);
+  const minuteCodes = getList(Segment.minutes, true);
 
-  constructor(props: CronTabBaseProps) {
-    super(props, [Segment.minutes]);
-  }
+  const genEvery = () => (
+    <SimpleEvery
+      cssClassPrefix={classPrefix}
+      checked={api.isEverySelected()}
+      disabled={service.isDisabled()}
+      segmentId={genId(Mode.EVERY, session)}
+      onSelect={() => api.selectEvery()}
+      label={every.label}/>
+  );
 
-  protected genEvery() {
-    return (
-      <SimpleEvery
-        cssClassPrefix={this.getCssClassPrefix()}
-        checked={this.uiServiceApi.isEverySelected()}
-        disabled={this.uiService.isDisabled()}
-        segmentId={this.genId(Mode.EVERY)}
-        onSelect={() => this.uiServiceApi.selectEvery()}
-        label={this.props.localization.quartz.minute.every.label}/>
-    );
-  }
+  const genIncrement = () => (
+    <SimpleIncrement
+      cssClassPrefix={classPrefix}
+      segmentId={genId(Mode.INCREMENT, session)}
+      checked={api.isIncrementSelected()}
+      disabled={service.isDisabled()}
+      disabledControls={api.isIncrementControlsDisabled()}
+      onSelect={() => api.selectIncrement()}
+      label1={increment.label1}
+      label2={increment.label2}
+      primaryOptions={minuteCodes}
+      primaryValue={api.getIncrementPrimaryValue()}
+      onPrimaryValueChange={api.setIncrementPrimaryValue}
+      secondaryOptions={minutesList}
+      secondaryValue={api.getIncrementSecondaryValue()}
+      onSecondaryValueChange={api.setIncrementSecondaryValue}/>
+  );
 
-  protected genIncrement() {
-    return (
-      <SimpleIncrement
-        cssClassPrefix={this.getCssClassPrefix()}
-        segmentId={this.genId(Mode.INCREMENT)}
-        checked={this.uiServiceApi.isIncrementSelected()}
-        disabled={this.uiService.isDisabled()}
-        disabledControls={this.uiServiceApi.isIncrementControlsDisabled()}
-        onSelect={() => this.uiServiceApi.selectIncrement()}
-        label1={this.props.localization.quartz.minute.increment.label1}
-        label2={this.props.localization.quartz.minute.increment.label2}
-        primaryOptions={this.minuteCodes}
-        primaryValue={this.uiServiceApi.getIncrementPrimaryValue()}
-        onPrimaryValueChange={this.uiServiceApi.setIncrementPrimaryValue}
-        secondaryOptions={this.minutesList}
-        secondaryValue={this.uiServiceApi.getIncrementSecondaryValue()}
-        onSecondaryValueChange={this.uiServiceApi.setIncrementSecondaryValue}/>
-    );
-  }
+  const genAnd = () => (
+    <SimpleAnd
+      cssClassPrefix={classPrefix}
+      segmentId={genId(Mode.AND, session)}
+      checked={api.isAndSelected()}
+      disabled={service.isDisabled()}
+      disabledControls={api.isAndControlsDisabled()}
+      onSelect={() => api.selectAnd()}
+      label={and.label}
+      onValueChange={api.selectAndValue}
+      isValueSelected={value => api.isSelectedAndValue(value)}
+      options={minutesList}/>
+  );
 
-  protected genAnd() {
-    return (
-      <SimpleAnd
-        cssClassPrefix={this.getCssClassPrefix()}
-        segmentId={this.genId(Mode.AND)}
-        checked={this.uiServiceApi.isAndSelected()}
-        disabled={this.uiService.isDisabled()}
-        disabledControls={this.uiServiceApi.isAndControlsDisabled()}
-        onSelect={() => this.uiServiceApi.selectAnd()}
-        label={this.props.localization.quartz.minute.and.label}
-        onValueChange={this.uiServiceApi.selectAndValue}
-        isValueSelected={value => this.uiServiceApi.isSelectedAndValue(value)}
-        options={this.minutesList}/>
-    );
-  }
+  const genRange = () => (
+    <SimpleRange
+      cssClassPrefix={classPrefix}
+      segmentId={genId(Mode.RANGE, session)}
+      checked={api.isRangeSelected()}
+      disabled={service.isDisabled()}
+      onSelect={() => api.selectRange()}
+      disabledControls={api.isRangeControlsDisabled()}
+      label1={range.label1}
+      label2={range.label2}
+      primaryOptions={minutesList}
+      primaryValue={api.getRangePrimaryValue()}
+      onPrimaryValueChange={api.setRangePrimaryValue}
+      secondaryOptions={minutesList}
+      secondaryValue={api.getRangeSecondaryValue()}
+      onSecondaryValueChange={api.setRangeSecondaryValue}/>
+  );
 
-  protected genRange() {
-    return (
-      <SimpleRange
-        cssClassPrefix={this.getCssClassPrefix()}
-        segmentId={this.genId(Mode.RANGE)}
-        checked={this.uiServiceApi.isRangeSelected()}
-        disabled={this.uiService.isDisabled()}
-        onSelect={() => this.uiServiceApi.selectRange()}
-        disabledControls={this.uiServiceApi.isRangeControlsDisabled()}
-        label1={this.props.localization.quartz.minute.range.label1}
-        label2={this.props.localization.quartz.minute.range.label2}
-        primaryOptions={this.minutesList}
-        primaryValue={this.uiServiceApi.getRangePrimaryValue()}
-        onPrimaryValueChange={this.uiServiceApi.setRangePrimaryValue}
-        secondaryOptions={this.minutesList}
-        secondaryValue={this.uiServiceApi.getRangeSecondaryValue()}
-        onSecondaryValueChange={this.uiServiceApi.setRangeSecondaryValue}/>
-    );
-  }
+  return (
+    <div>
+      {genEvery()}
+      {genIncrement()}
+      {genAnd()}
+      {genRange()}
+    </div>
+  );
 }

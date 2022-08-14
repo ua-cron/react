@@ -1,10 +1,10 @@
 import React from 'react';
 import { Mode } from '@sbzen/cron-core';
 
+import { CronBaseProps } from './../../../cron-base-props.type';
 import { genClassName } from './../../../helpers';
 
 type Props = {
-  cssClassPrefix?: string;
   checked?: boolean;
   disabled?: boolean;
   disabledControls?: boolean;
@@ -18,7 +18,7 @@ type Props = {
   label1: string;
   label2: string;
   segmentId: string;
-}
+} & CronBaseProps;
 
 export const SimpleIncrement = ({
   cssClassPrefix = '',

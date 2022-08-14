@@ -1,3 +1,3 @@
 export type CronBaseProps = {
-  cssClassPrefix?: string;
+  cssClassPrefix?: string
 };

@@ -1,99 +1,154 @@
-import React from 'react';
-import { Type } from '@sbzen/cron-core';
+import React, { useState, useEffect } from 'react';
+import {
+  CronQuartzUIService,
+  QuartzType,
+  Type,
+  getSegmentsList,
+  getTypeSegments,
+  getQuartzTypes
+} from '@sbzen/cron-core';
 
-import { CronHostComponent, CronHostProps } from './../cron-host.abstract';
-import { QuartzCronSecond, QuartzCronMinute, QuartzCronHour, QuartzCronMonth, QuartzCronYear, QuartzCronDay } from './tabs';
-import { QuartzCronDI } from './quartz-di';
+import { getLocalization, genSessionId, genClassName } from './../helpers';
+import { CronHostProps } from './../cron-props.type';
+import {
+  QuartzCronSecond,
+  QuartzCronMinute,
+  QuartzCronHour,
+  QuartzCronMonth,
+  QuartzCronYear,
+  QuartzCronDay
+} from './tabs';
 
-import './../cron.scss';
+export type ReQuartzCronProps = CronHostProps<QuartzType>;
+export const ReQuartzCron = ({
+  localization: propLocalization,
+  hideTabs: propHideTabs,
+  value = '',
+  activeTab,
+  tabs = getQuartzTypes(),
+  renderYearsFrom,
+  renderYearsTo,
+  cssClassPrefix,
+  disabled,
+  onTabChange,
+  onChange
+}: ReQuartzCronProps) => {
+  const [tab, setTab] = useState(activeTab || tabs[0]);
+  const [service] = useState(new CronQuartzUIService(renderYearsFrom));
+  const [renderCount, setRenderCount] = useState(0);
+  const [session] = useState(genSessionId());
+  const localization = getLocalization(propLocalization);
+  const hasTabs = !propHideTabs && !!tabs.length;
+  const tabProps = {
+    cssClassPrefix,
+    localization,
+    session,
+    service
+  };
+  const yearTabProps = {
+    ...tabProps,
+    renderYearsFrom,
+    renderYearsTo
+  };
 
-export type ReQuartzCronProps = CronHostProps;
-export class ReQuartzCron extends CronHostComponent {
-  override componentWillUnmount() {
-    QuartzCronDI.destroy(this.session);
-  }
+  useEffect(() => {
+    const shouldUpdate = !!activeTab && activeTab !== tab;
+    shouldUpdate && setTab(activeTab);
+  }, [activeTab]);
+  useEffect(() => () => service.destroy(), [service]);
+  useEffect(() => listenChangas());
+  useEffect(() => service.fillFromExpression(value), [value]);
+  useEffect(() => service.setDisabled(disabled), [disabled]);
 
-  override render() {
-    return this.renderHost(this.state.tab, 'c-quartz');
-  }
+  const listenChangas = () => {
+    const segments = getSegmentsList();
+    return service.listen(segments, (_, segment) => {
+      const shouldApply = getTypeSegments(tab).includes(segment);
+      if (shouldApply) {
+        applyChanges();
+      }
+    });
+  };
 
-  protected getTabs() {
-    return this.props.tabs || [
-      Type.SECONDS,
-      Type.MINUTES,
-      Type.HOURS,
-      Type.DAY,
-      Type.MONTH,
-      Type.YEAR
-    ];
-  }
+  const genContent = () => {
+    if (tab === Type.SECONDS) {
+      return <QuartzCronSecond {...tabProps}/>;
+    } else if (tab === Type.MINUTES) {
+      return <QuartzCronMinute {...tabProps}/>;
+    } else if (tab === Type.HOURS) {
+      return <QuartzCronHour {...tabProps}/>;
+    } else if (tab === Type.MONTH) {
+      return <QuartzCronMonth {...tabProps}/>;
+    } else if (tab === Type.YEAR) {
+      return <QuartzCronYear {...yearTabProps}/>;
+    } else {
+      return <QuartzCronDay {...tabProps}/>;
+    }
+  };
 
-  protected genContent() {
-    const cronLocalization = this.getLocalization();
-    const second = (
-      <QuartzCronSecond
-        localization={cronLocalization}
-        session={this.session}
-        cssClassPrefix={this.props.cssClassPrefix}
-        disabled={this.props.disabled}
-        onChange={() => this.applyChanges()} />
+  const genTabs = (activeTab: QuartzType) => {
+    const className = genClassName(cssClassPrefix, ['nav', 'nav-tabs', 'mb-2'], ['c-tabs']);
+    return (
+      <ul
+        className={className}
+        role="tablist"
+        aria-label="Cron Generator Tabs">
+
+        {tabs.map(t => genTab(t, activeTab))}
+      </ul>
     );
-    const minute = (
-      <QuartzCronMinute
-        localization={cronLocalization}
-        session={this.session}
-        cssClassPrefix={this.props.cssClassPrefix}
-        disabled={this.props.disabled}
-        onChange={() => this.applyChanges()} />
-    );
-    const hour = (
-      <QuartzCronHour
-        localization={cronLocalization}
-        session={this.session}
-        cssClassPrefix={this.props.cssClassPrefix}
-        disabled={this.props.disabled}
-        onChange={() => this.applyChanges()} />
-    );
-    const month = (
-      <QuartzCronMonth
-        localization={cronLocalization}
-        session={this.session}
-        cssClassPrefix={this.props.cssClassPrefix}
-        disabled={this.props.disabled}
-        onChange={() => this.applyChanges()} />
-    );
-    const year = (
-      <QuartzCronYear
-        localization={cronLocalization}
-        session={this.session}
-        renderYearsFrom={this.props.renderYearsFrom}
-        renderYearsTo={this.props.renderYearsTo}
-        cssClassPrefix={this.props.cssClassPrefix}
-        disabled={this.props.disabled}
-        onChange={() => this.applyChanges()} />
-    );
-    const day = (
-      <QuartzCronDay
-        localization={cronLocalization}
-        session={this.session}
-        cssClassPrefix={this.props.cssClassPrefix}
-        disabled={this.props.disabled}
-        onChange={() => this.applyChanges()} />
-    );
-    const map = new Map<Type, JSX.Element>([
-      [Type.SECONDS, second],
-      [Type.MINUTES, minute],
-      [Type.HOURS, hour],
-      [Type.MONTH, month],
-      [Type.YEAR, year],
-      [Type.DAY, day]
-    ]);
-    return map.get(this.state.tab) || null;
-  }
+  };
 
-  protected getQuartzCron() {
-    return QuartzCronDI.get(this.session);
-  }
-}
+  const genTab = (tab: QuartzType, activeTab: QuartzType) => {
+    const { tabs: tabsLocalization } = localization;
+    const isActive = activeTab === tab;
+    const className = genClassName(cssClassPrefix, ['nav-link'], [tab, 'c-tab', isActive ? 'active': '']);
+    const tabKey = tab.toLowerCase() as keyof typeof tabsLocalization;
+
+    return (
+      <button
+        key={tab}
+        role="tab"
+        type="button"
+        className={className}
+        aria-selected={isActive}
+        tabIndex={isActive ? 0 : -1}
+        onClick={() => changeTab(tab)}>
+
+        {tabsLocalization[tabKey]}
+      </button>
+    );
+  };
+
+  const changeTab = (tab: QuartzType) => {
+    setTab(tab);
+    if (onTabChange) {
+      onTabChange(tab);
+    }
+  };
+
+  const applyChanges = () => {
+    const str = service.toString();
+    if (str !== value && onChange) {
+      onChange(str);
+    }
+    setRenderCount(renderCount + 1);
+  };
+
+  return (
+    <div className={'c-host c-quartz'}>
+      {hasTabs && genTabs(tab)}
+
+      <div
+        className="c-tab-content"
+        style={{ outline: 'none' }}
+        role="tabpanel"
+        tabIndex={0}
+        tab-name={tab}>
+        {genContent()}
+      </div>
+    </div>
+  );
+};
 
 export default ReQuartzCron;

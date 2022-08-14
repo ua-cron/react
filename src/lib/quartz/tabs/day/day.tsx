@@ -1,564 +1,553 @@
 import React from 'react';
 import { Segment, Mode, Type, getDaysOfWeekCodes, getList } from '@sbzen/cron-core';
 
+import { genId, getCssClassPrefix, localizeLabel, genClassName } from './../../../helpers';
 import { SimpleRange } from './../../../shared';
-import { CronTabBaseProps } from './../../../cron-tab-base.abstract';
-import { genClassName } from './../../../helpers';
-import { QuartzTabBaseComponent } from './../tab-base.abstract';
+import { CronQuartzTabProps } from './../shared';
 
-export class QuartzCronDay extends QuartzTabBaseComponent<CronTabBaseProps> {
-  private readonly uiService = this.getQuartzCron();
-  private readonly uiServiceApi = this.uiService.getApi<Type.DAY>(Type.DAY);
-  private readonly daysOfWeekEvery = getList(Segment.dayOfWeek, true);
-  private readonly daysOfWeek = getList(Segment.dayOfWeek);
-  private readonly daysOfWeekCodes = getDaysOfWeekCodes();
-  private readonly daysOfMonthEvery = getList(Segment.dayOfMonth, true);
-  private readonly daysOfMonth = getList(Segment.dayOfMonth);
-  private readonly limitedDaysOfMonth = this.daysOfMonthEvery.slice(0, 5);
+export const QuartzCronDay = ({
+  service,
+  session,
+  localization,
+  cssClassPrefix
+}: CronQuartzTabProps) => {
+  const { common, quartz } = localization;
+  const {
+    every,
+    dayOfWeekIncrement,
+    dayOfMonthLastDay,
+    dayOfWeekNTHWeekDayOfMonth,
+    dayOfMonthNearestWeekDayOfMonth,
+    dayOfMonthDaysBeforeEndMonth,
+    dayOfWeekLastNTHDayWeek,
+    dayOfMonthLastDayWeek,
+    dayOfMonthIncrement,
+    dayOfWeekAnd,
+    dayOfWeekRange,
+    dayOfMonthAnd
+  } = quartz.day;
+  const classPrefix = getCssClassPrefix(cssClassPrefix);
+  const api = service.getApi(Type.DAY);
+  const daysOfWeekEvery = getList(Segment.dayOfWeek, true);
+  const daysOfWeek = getList(Segment.dayOfWeek);
+  const daysOfWeekCodes = getDaysOfWeekCodes();
+  const daysOfMonthEvery = getList(Segment.dayOfMonth, true);
+  const daysOfMonth = getList(Segment.dayOfMonth);
+  const limitedDaysOfMonth = daysOfMonthEvery.slice(0, 5);
 
-  constructor(props: CronTabBaseProps) {
-    super(props, [Segment.dayOfMonth, Segment.dayOfWeek]);
-  }
-
-  override render() {
-    return (
-      <div>
-        {this.genEvery()}
-        {this.genDayOfWeekIncrement()}
-        {this.genDayOfMonthIncrement()}
-        {this.genDayOfWeekAnd()}
-        {this.getDayOfWeekRange()}
-        {this.genDayOfMonthAnd()}
-        {this.genDayOfMonthLastDay()}
-        {this.genDayOfMonthLastDayWeek()}
-        {this.genDayOfWeekLastNTHDayWeek()}
-        {this.genDayOfMonthDaysBeforeEndMonth()}
-        {this.genDayOfMonthNearestWeekDayOfMonth()}
-        {this.genDayOfWeekNTHWeekDayOfMonth()}
-      </div>
-    );
-  }
-
-  private genEvery() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group'], ['c-every-weekday', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-every-weekday-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-every-weekday-option'])}
-            type="radio"
-            id={this.genId(Mode.EVERY, Segment.dayOfWeek)}
-            value={Mode.EVERY}
-            checked={this.uiServiceApi.isEverySelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectEvery()} />
-
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-every-weekday-option-label'])}
-            htmlFor={this.genId(Mode.EVERY, Segment.dayOfWeek)}>
-
-            {this.props.localization.quartz.day.every.label}
-          </label>
-        </div>
-      </div>
-    );
-  }
-
-  private genDayOfWeekIncrement() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group', 'form-inline'], ['c-increment-weekday', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-increment-weekday-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-increment-weekday-option'])}
-            type="radio"
-            id={this.genId(Mode.INCREMENT, Segment.dayOfWeek)}
-            value={Mode.INCREMENT}
-            checked={this.uiServiceApi.isDayOfWeekIncrementSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfWeekIncrement()} />
-
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-increment-weekday-option-label'])}
-            htmlFor={this.genId(Mode.INCREMENT, Segment.dayOfWeek)}>
-
-            {this.props.localization.quartz.day.dayOfWeekIncrement.label1}
-          </label>
-        </div>
-
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-increment-weekday-every'])}
-          disabled={this.uiServiceApi.isDayOfWeekIncrementControlsDisabled()}
-          value={this.uiServiceApi.getDayOfWeekIncrementPrimary()}
-          onChange={(e) => this.uiServiceApi.setDayOfWeekIncrementPrimary(e.target.value)}>
-
-          {this.daysOfWeekEvery.map(item => {
-            return (
-              <option
-                value={item.value}
-                key={item.value}>
-                {item.value}
-              </option>
-            );
-          })}
-        </select>
+  const genEvery = () => (
+    <div className={genClassName(classPrefix, ['form-group'], ['c-every-weekday', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-every-weekday-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-every-weekday-option'])}
+          type="radio"
+          id={genId(Mode.EVERY, session, Segment.dayOfWeek)}
+          value={Mode.EVERY}
+          checked={api.isEverySelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectEvery()} />
 
         <label
-          className="c-increment-weekday-option-label2"
-          htmlFor={this.genId(Mode.INCREMENT, Segment.dayOfWeek)}>
-          {this.props.localization.quartz.day.dayOfWeekIncrement.label2}
-        </label>
+          className={genClassName(classPrefix, ['form-check-label'], ['c-every-weekday-option-label'])}
+          htmlFor={genId(Mode.EVERY, session, Segment.dayOfWeek)}>
 
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-increment-weekday-from'])}
-          disabled={this.uiServiceApi.isDayOfWeekIncrementControlsDisabled()}
-          value={this.uiServiceApi.getDayOfWeekIncrementSecondary()}
-          onChange={(e) => this.uiServiceApi.setDayOfWeekIncrementSecondary(e.target.value)}>
-
-          {this.daysOfWeek.map(item => {
-            return (
-              <option
-                key={item.value}
-                value={item.value}>
-                {this.localizeLabel(item.label, this.props.localization.common.dayOfWeek)}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-    );
-  }
-
-  private genDayOfMonthIncrement() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group', 'form-inline'], ['c-increment-monthday', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-increment-monthday-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-increment-monthday-option'])}
-            type="radio"
-            id={this.genId(Mode.INCREMENT, Segment.dayOfMonth)}
-            value={Mode.INCREMENT}
-            checked={this.uiServiceApi.isDayOfMonthIncrementSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfMonthIncrement()} />
-
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-increment-monthday-option-label'])}
-            htmlFor={this.genId(Mode.INCREMENT, Segment.dayOfMonth)}>
-            {this.props.localization.quartz.day.dayOfMonthIncrement.label1}
-          </label>
-        </div>
-
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-increment-monthday-every'])}
-          disabled={this.uiServiceApi.isDayOfMonthIncrementControlsDisabled()}
-          value={this.uiServiceApi.getDayOfMonthIncrementPrimary()}
-          onChange={(e) => this.uiServiceApi.setDayOfMonthIncrementPrimary(e.target.value)}>
-
-          {this.daysOfMonth.map(item => {
-            return (
-              <option
-                key={item.value}
-                value={item.value}>
-                {item.value}
-              </option>
-            );
-          })}
-        </select>
-
-        <label
-          className="c-increment-monthday-option-label2"
-          htmlFor={this.genId(Mode.INCREMENT, Segment.dayOfMonth)}>
-          {this.props.localization.quartz.day.dayOfMonthIncrement.label2}
-        </label>
-
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-increment-monthday-from'])}
-          disabled={this.uiServiceApi.isDayOfMonthIncrementControlsDisabled()}
-          value={this.uiServiceApi.getDayOfMonthIncrementSecondary()}
-          onChange={(e) => this.uiServiceApi.setDayOfMonthIncrementSecondary(e.target.value)}>
-
-          {this.daysOfMonthEvery.map(item => {
-            return (
-              <option
-                key={item.value}
-                value={item.value}>
-                {this.localizeLabel(item.label, this.props.localization.common.dayOfMonth)}
-              </option>
-            );
-          })}
-        </select>
-
-        <label
-          className="c-increment-monthday-option-label3"
-          htmlFor={this.genId(Mode.INCREMENT, Segment.dayOfMonth)}>
-          {this.props.localization.quartz.day.dayOfMonthIncrement.label3}
+          {every.label}
         </label>
       </div>
-    );
-  }
+    </div>
+  );
 
-  private genDayOfWeekAnd() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group'], ['c-and-weekday', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-and-weekday-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-and-weekday-option'])}
-            type="radio"
-            id={this.genId(Mode.AND, Segment.dayOfWeek)}
-            value={Mode.INCREMENT}
-            checked={this.uiServiceApi.isDayOfWeekAndSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfWeekAnd()} />
+  const genDayOfWeekIncrement = () => (
+    <div className={genClassName(classPrefix, ['form-group', 'form-inline'], ['c-increment-weekday', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-increment-weekday-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-increment-weekday-option'])}
+          type="radio"
+          id={genId(Mode.INCREMENT, session, Segment.dayOfWeek)}
+          value={Mode.INCREMENT}
+          checked={api.isDayOfWeekIncrementSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfWeekIncrement()} />
 
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-and-weekday-option-label'])}
-            htmlFor={this.genId(Mode.AND, Segment.dayOfWeek)}>
-            {this.props.localization.quartz.day.dayOfWeekAnd.label}
-          </label>
-        </div>
+        <label
+          className={genClassName(classPrefix, ['form-check-label'], ['c-increment-weekday-option-label'])}
+          htmlFor={genId(Mode.INCREMENT, session, Segment.dayOfWeek)}>
 
-        <div className={genClassName(this.props.cssClassPrefix, ['row', 'pl-3', 'pt-1'], ['c-and-weekday-list'])}>
-          {this.daysOfWeekCodes.map(item => {
-            return (
-              <div
-                className={genClassName(this.props.cssClassPrefix, ['col-2'], ['c-and-weekday-item'])}
-                item-value={item.value}
-                key={item.value}>
+          {dayOfWeekIncrement.label1}
+        </label>
+      </div>
 
-                <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-and-weekday-item-check'])}>
-                  <input
-                    className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-and-weekday-item-field'])}
-                    type="checkbox"
-                    id={this.genId(Mode.AND, Segment.dayOfWeek + item.value)}
-                    value={item.value}
-                    disabled={this.uiServiceApi.isDayOfWeekAndControlsDisabled()}
-                    checked={this.uiServiceApi.isSelectedDayOfWeekAndValue(item.value)}
-                    onChange={() => this.uiServiceApi.selectDayOfWeekAndValue(item.value)} />
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-increment-weekday-every'])}
+        disabled={api.isDayOfWeekIncrementControlsDisabled()}
+        value={api.getDayOfWeekIncrementPrimary()}
+        onChange={(e) => api.setDayOfWeekIncrementPrimary(e.target.value)}>
 
-                  <label
-                    className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-and-weekday-item-label'])}
-                    htmlFor={this.genId(Mode.AND, Segment.dayOfWeek + item.value)}>
-                    {this.localizeLabel(item.label, this.props.localization.common.dayOfWeek)}
-                  </label>
-                </div>
+        {daysOfWeekEvery.map(item => {
+          return (
+            <option
+              value={item.value}
+              key={item.value}>
+              {item.value}
+            </option>
+          );
+        })}
+      </select>
+
+      <label
+        className="c-increment-weekday-option-label2"
+        htmlFor={genId(Mode.INCREMENT, session, Segment.dayOfWeek)}>
+        {dayOfWeekIncrement.label2}
+      </label>
+
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-increment-weekday-from'])}
+        disabled={api.isDayOfWeekIncrementControlsDisabled()}
+        value={api.getDayOfWeekIncrementSecondary()}
+        onChange={(e) => api.setDayOfWeekIncrementSecondary(e.target.value)}>
+
+        {daysOfWeek.map(item => {
+          return (
+            <option
+              key={item.value}
+              value={item.value}>
+              {localizeLabel(item.label, common.dayOfWeek)}
+            </option>
+          );
+        })}
+      </select>
+    </div>
+  );
+
+  const genDayOfMonthIncrement = () => (
+    <div className={genClassName(classPrefix, ['form-group', 'form-inline'], ['c-increment-monthday', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-increment-monthday-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-increment-monthday-option'])}
+          type="radio"
+          id={genId(Mode.INCREMENT, session, Segment.dayOfMonth)}
+          value={Mode.INCREMENT}
+          checked={api.isDayOfMonthIncrementSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfMonthIncrement()} />
+
+        <label
+          className={genClassName(classPrefix, ['form-check-label'], ['c-increment-monthday-option-label'])}
+          htmlFor={genId(Mode.INCREMENT, session, Segment.dayOfMonth)}>
+          {dayOfMonthIncrement.label1}
+        </label>
+      </div>
+
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-increment-monthday-every'])}
+        disabled={api.isDayOfMonthIncrementControlsDisabled()}
+        value={api.getDayOfMonthIncrementPrimary()}
+        onChange={(e) => api.setDayOfMonthIncrementPrimary(e.target.value)}>
+
+        {daysOfMonth.map(item => {
+          return (
+            <option
+              key={item.value}
+              value={item.value}>
+              {item.value}
+            </option>
+          );
+        })}
+      </select>
+
+      <label
+        className="c-increment-monthday-option-label2"
+        htmlFor={genId(Mode.INCREMENT, session, Segment.dayOfMonth)}>
+        {dayOfMonthIncrement.label2}
+      </label>
+
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-increment-monthday-from'])}
+        disabled={api.isDayOfMonthIncrementControlsDisabled()}
+        value={api.getDayOfMonthIncrementSecondary()}
+        onChange={(e) => api.setDayOfMonthIncrementSecondary(e.target.value)}>
+
+        {daysOfMonthEvery.map(item => {
+          return (
+            <option
+              key={item.value}
+              value={item.value}>
+              {localizeLabel(item.label, common.dayOfMonth)}
+            </option>
+          );
+        })}
+      </select>
+
+      <label
+        className="c-increment-monthday-option-label3"
+        htmlFor={genId(Mode.INCREMENT, session, Segment.dayOfMonth)}>
+        {dayOfMonthIncrement.label3}
+      </label>
+    </div>
+  );
+
+  const genDayOfWeekAnd = () => (
+    <div className={genClassName(classPrefix, ['form-group'], ['c-and-weekday', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-and-weekday-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-and-weekday-option'])}
+          type="radio"
+          id={genId(Mode.AND, session, Segment.dayOfWeek)}
+          value={Mode.INCREMENT}
+          checked={api.isDayOfWeekAndSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfWeekAnd()} />
+
+        <label
+          className={genClassName(classPrefix, ['form-check-label'], ['c-and-weekday-option-label'])}
+          htmlFor={genId(Mode.AND, session, Segment.dayOfWeek)}>
+          {dayOfWeekAnd.label}
+        </label>
+      </div>
+
+      <div className={genClassName(classPrefix, ['row', 'pl-3', 'pt-1'], ['c-and-weekday-list'])}>
+        {daysOfWeekCodes.map(item => {
+          return (
+            <div
+              className={genClassName(classPrefix, ['col-3 col-md-2'], ['c-and-weekday-item'])}
+              item-value={item.value}
+              key={item.value}>
+
+              <div className={genClassName(classPrefix, ['form-check'], ['c-and-weekday-item-check'])}>
+                <input
+                  className={genClassName(classPrefix, ['form-check-input'], ['c-and-weekday-item-field'])}
+                  type="checkbox"
+                  id={genId(Mode.AND, session, Segment.dayOfWeek + item.value)}
+                  value={item.value}
+                  disabled={api.isDayOfWeekAndControlsDisabled()}
+                  checked={api.isSelectedDayOfWeekAndValue(item.value)}
+                  onChange={() => api.selectDayOfWeekAndValue(item.value)} />
+
+                <label
+                  className={genClassName(classPrefix, ['form-check-label'], ['c-and-weekday-item-label'])}
+                  htmlFor={genId(Mode.AND, session, Segment.dayOfWeek + item.value)}>
+                  {localizeLabel(item.label, common.dayOfWeek)}
+                </label>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
-    );
-  }
+    </div>
+  );
 
-  private getDayOfWeekRange() {
-    return (
-      <SimpleRange
-        cssClassPrefix={this.getCssClassPrefix()}
-        segmentId={this.genId(Mode.RANGE)}
-        checked={this.uiServiceApi.isDayOfWeekRangeSelected()}
-        disabled={this.uiService.isDisabled()}
-        onSelect={() => this.uiServiceApi.selectDayOfWeekRange()}
-        disabledControls={this.uiServiceApi.isDayOfWeekRangeControlsDisabled()}
-        label1={this.props.localization.quartz.day.dayOfWeekRange.label1}
-        label2={this.props.localization.quartz.day.dayOfWeekRange.label2}
-        primaryOptions={this.daysOfWeekCodes}
-        primaryValue={this.uiServiceApi.getDayOfWeekRangePrimary()}
-        onPrimaryValueChange={this.uiServiceApi.setDayOfWeekRangePrimary}
-        secondaryOptions={this.daysOfWeekCodes}
-        secondaryValue={this.uiServiceApi.getDayOfWeekRangeSecondary()}
-        onSecondaryValueChange={this.uiServiceApi.setDayOfWeekRangeSecondary}/>
-    );
-  }
+  const getDayOfWeekRange = () => (
+    <SimpleRange
+      cssClassPrefix={classPrefix}
+      segmentId={genId(Mode.RANGE, session)}
+      checked={api.isDayOfWeekRangeSelected()}
+      disabled={service.isDisabled()}
+      onSelect={() => api.selectDayOfWeekRange()}
+      disabledControls={api.isDayOfWeekRangeControlsDisabled()}
+      label1={dayOfWeekRange.label1}
+      label2={dayOfWeekRange.label2}
+      primaryOptions={daysOfWeekCodes}
+      primaryValue={api.getDayOfWeekRangePrimary()}
+      onPrimaryValueChange={api.setDayOfWeekRangePrimary}
+      secondaryOptions={daysOfWeekCodes}
+      secondaryValue={api.getDayOfWeekRangeSecondary()}
+      onSecondaryValueChange={api.setDayOfWeekRangeSecondary}/>
+  );
 
-  private genDayOfMonthAnd() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group'], ['c-and-monthday', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-and-monthday-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-and-monthday-option'])}
-            type="radio"
-            id={this.genId(Mode.AND, Segment.dayOfMonth)}
-            value={Mode.INCREMENT}
-            checked={this.uiServiceApi.isDayOfMonthAndSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfMonthAnd()} />
+  const genDayOfMonthAnd = () => (
+    <div className={genClassName(classPrefix, ['form-group'], ['c-and-monthday', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-and-monthday-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-and-monthday-option'])}
+          type="radio"
+          id={genId(Mode.AND, session, Segment.dayOfMonth)}
+          value={Mode.INCREMENT}
+          checked={api.isDayOfMonthAndSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfMonthAnd()} />
 
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-and-monthday-option-label'])}
-            htmlFor={this.genId(Mode.AND, Segment.dayOfMonth)}>
-            {this.props.localization.quartz.day.dayOfMonthAnd.label}
-          </label>
-        </div>
+        <label
+          className={genClassName(classPrefix, ['form-check-label'], ['c-and-monthday-option-label'])}
+          htmlFor={genId(Mode.AND, session, Segment.dayOfMonth)}>
+          {dayOfMonthAnd.label}
+        </label>
+      </div>
 
-        <div className={genClassName(this.props.cssClassPrefix, ['row', 'pl-3', 'pt-1'], ['c-and-monthday-list'])}>
-          {this.daysOfMonth.map(item => {
-            return (
-              <div
-                className={genClassName(this.props.cssClassPrefix, ['col-1'], ['c-and-monthday-item'])}
-                item-value={item.value}
-                key={item.value}>
+      <div className={genClassName(classPrefix, ['row', 'pl-3', 'pt-1'], ['c-and-monthday-list'])}>
+        {daysOfMonth.map(item => {
+          return (
+            <div
+              className={genClassName(classPrefix, ['col-2 col-md-1'], ['c-and-monthday-item'])}
+              item-value={item.value}
+              key={item.value}>
 
-                <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-and-monthday-item-check'])}>
-                  <input
-                    className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-and-monthday-item-field'])}
-                    type="checkbox"
-                    id={this.genId(Mode.AND, Segment.dayOfMonth + item.value)}
-                    value={item.value}
-                    disabled={this.uiServiceApi.isDayOfMonthAndControlsDisabled()}
-                    checked={this.uiServiceApi.isSelectedDayOfMonthAndValue(item.value)}
-                    onChange={() => this.uiServiceApi.selectDayOfMonthAndValue(item.value)} />
+              <div className={genClassName(classPrefix, ['form-check'], ['c-and-monthday-item-check'])}>
+                <input
+                  className={genClassName(classPrefix, ['form-check-input'], ['c-and-monthday-item-field'])}
+                  type="checkbox"
+                  id={genId(Mode.AND, session, Segment.dayOfMonth + item.value)}
+                  value={item.value}
+                  disabled={api.isDayOfMonthAndControlsDisabled()}
+                  checked={api.isSelectedDayOfMonthAndValue(item.value)}
+                  onChange={() => api.selectDayOfMonthAndValue(item.value)} />
 
-                  <label
-                    className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-and-monthday-item-label'])}
-                    htmlFor={this.genId(Mode.AND, Segment.dayOfMonth + item.value)}>
-                    {item.label}
-                  </label>
-                </div>
+                <label
+                  className={genClassName(classPrefix, ['form-check-label'], ['c-and-monthday-item-label'])}
+                  htmlFor={genId(Mode.AND, session, Segment.dayOfMonth + item.value)}>
+                  {item.label}
+                </label>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
-    );
-  }
+    </div>
+  );
 
-  private genDayOfMonthLastDay() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group'], ['c-last-monthday', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-last-monthday-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-last-monthday-option'])}
-            type="radio"
-            id={this.genId(Mode.LAST_DAY, Segment.dayOfMonth)}
-            value={Mode.LAST_DAY}
-            checked={this.uiServiceApi.isDayOfMonthLastDaySelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfMonthLastDay()} />
-
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-last-monthday-option-label'])}
-            htmlFor={this.genId(Mode.LAST_DAY, Segment.dayOfMonth)}>
-            {this.props.localization.quartz.day.dayOfMonthLastDay.label}
-          </label>
-        </div>
-      </div>
-    );
-  }
-
-  private genDayOfMonthLastDayWeek() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group'], ['c-last-weekday', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-last-weekday-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-last-weekday-option'])}
-            type="radio"
-            id={this.genId(Mode.LAST_DAY_WEEK, Segment.dayOfMonth)}
-            value={Mode.LAST_DAY_WEEK}
-            checked={this.uiServiceApi.isDayOfMonthLastDayWeekSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfMonthLastDayWeek()} />
-
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-last-weekday-option-label'])}
-            htmlFor={this.genId(Mode.LAST_DAY_WEEK, Segment.dayOfMonth)}>
-            {this.props.localization.quartz.day.dayOfMonthLastDayWeek.label}
-          </label>
-        </div>
-      </div>
-    );
-  }
-
-  private genDayOfWeekLastNTHDayWeek() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group', 'form-inline'], ['c-last-nth', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-last-nth-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-last-nth-option'])}
-            type="radio"
-            id={this.genId(Mode.LAST_NTH_DAY_WEEK, Segment.dayOfWeek)}
-            value={Mode.LAST_NTH_DAY_WEEK}
-            checked={this.uiServiceApi.isDayOfWeekLastNTHDayWeekSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfWeekLastNTHDayWeek()} />
-
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-last-nth-option-label'])}
-            htmlFor={this.genId(Mode.LAST_NTH_DAY_WEEK, Segment.dayOfWeek)}>
-
-            {this.props.localization.quartz.day.dayOfWeekLastNTHDayWeek.label1}
-          </label>
-        </div>
-
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-last-nth-weekday'])}
-          disabled={this.uiServiceApi.isDayOfWeekLastNTHDayWeekControlsDisabled()}
-          value={this.uiServiceApi.getDayOfWeekLastNTHDayWeekValue()}
-          onChange={(e) => this.uiServiceApi.setDayOfWeekLastNTHDayWeekValue(e.target.value)}>
-
-          {this.daysOfWeek.map(item => {
-            return (
-              <option
-                value={item.value + 'L'}
-                key={item.value + 'L'}>
-                {this.localizeLabel(item.label, this.props.localization.common.dayOfWeek)}
-              </option>
-            );
-          })}
-        </select>
+  const genDayOfMonthLastDay = () => (
+    <div className={genClassName(classPrefix, ['form-group'], ['c-last-monthday', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-last-monthday-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-last-monthday-option'])}
+          type="radio"
+          id={genId(Mode.LAST_DAY, session, Segment.dayOfMonth)}
+          value={Mode.LAST_DAY}
+          checked={api.isDayOfMonthLastDaySelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfMonthLastDay()} />
 
         <label
-          className="c-last-nth-option-label2"
-          htmlFor={this.genId(Mode.LAST_NTH_DAY_WEEK, Segment.dayOfWeek)}>
-          {this.props.localization.quartz.day.dayOfWeekLastNTHDayWeek.label2}
+          className={genClassName(classPrefix, ['form-check-label'], ['c-last-monthday-option-label'])}
+          htmlFor={genId(Mode.LAST_DAY, session, Segment.dayOfMonth)}>
+          {dayOfMonthLastDay.label}
         </label>
       </div>
-    );
-  }
+    </div>
+  );
 
-  private genDayOfMonthDaysBeforeEndMonth() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group', 'form-inline'], ['c-day-before-end', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-day-before-end-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-day-before-end-option'])}
-            type="radio"
-            id={this.genId(Mode.DAYS_BEFORE_END_MONTH, Segment.dayOfMonth)}
-            value={Mode.DAYS_BEFORE_END_MONTH}
-            checked={this.uiServiceApi.isDayOfMonthDaysBeforeEndMonthSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfMonthDaysBeforeEndMonth()} />
-        </div>
-
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-day-before-end-monthday'])}
-          disabled={this.uiServiceApi.isDayOfMonthDaysBeforeEndMonthControlsDisabled()}
-          value={this.uiServiceApi.getDayOfMonthDaysBeforeEndMonthValue()}
-          onChange={(e) => this.uiServiceApi.setDayOfMonthDaysBeforeEndMonthValue(e.target.value)}>
-
-          {this.daysOfMonth.map(item => {
-            return (
-              <option
-                value={'L-' + item.value}
-                key={'L-' + item.value}>
-                {item.label}
-              </option>
-            );
-          })}
-        </select>
+  const genDayOfMonthLastDayWeek = () => (
+    <div className={genClassName(classPrefix, ['form-group'], ['c-last-weekday', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-last-weekday-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-last-weekday-option'])}
+          type="radio"
+          id={genId(Mode.LAST_DAY_WEEK, session, Segment.dayOfMonth)}
+          value={Mode.LAST_DAY_WEEK}
+          checked={api.isDayOfMonthLastDayWeekSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfMonthLastDayWeek()} />
 
         <label
-          className="c-day-before-end-option-label"
-          htmlFor={this.genId(Mode.DAYS_BEFORE_END_MONTH, Segment.dayOfMonth)}>
-          {this.props.localization.quartz.day.dayOfMonthDaysBeforeEndMonth.label}
+          className={genClassName(classPrefix, ['form-check-label'], ['c-last-weekday-option-label'])}
+          htmlFor={genId(Mode.LAST_DAY_WEEK, session, Segment.dayOfMonth)}>
+          {dayOfMonthLastDayWeek.label}
         </label>
       </div>
-    );
-  }
+    </div>
+  );
 
-  private genDayOfMonthNearestWeekDayOfMonth() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group', 'form-inline'], ['c-nearest', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-nearest-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-nearest-option'])}
-            type="radio"
-            id={this.genId(Mode.NEAREST_WEEKDAY_OF_MONTH, Segment.dayOfMonth)}
-            value={Mode.NEAREST_WEEKDAY_OF_MONTH}
-            checked={this.uiServiceApi.isDayOfMonthNearestWeekDayOfMonthSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfMonthNearestWeekDayOfMonth()} />
-
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-nearest-option-label'])}
-            htmlFor={this.genId(Mode.NEAREST_WEEKDAY_OF_MONTH, Segment.dayOfMonth)}>
-            {this.props.localization.quartz.day.dayOfMonthNearestWeekDayOfMonth.label1}
-          </label>
-        </div>
-
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-nearest-monthday'])}
-          disabled={this.uiServiceApi.isDayOfMonthNearestWeekDayOfMonthControlsDisabled()}
-          value={this.uiServiceApi.getDayOfMonthNearestWeekDayOfMonthValue()}
-          onChange={(e) => this.uiServiceApi.setDayOfMonthNearestWeekDayOfMonthValue(e.target.value)}>
-
-          {this.daysOfMonthEvery.map(item => {
-            return (
-              <option
-                key={item.value + 'W'}
-                value={item.value + 'W'}>
-                {this.localizeLabel(item.label, this.props.localization.common.dayOfMonth)}
-              </option>
-            );
-          })}
-        </select>
+  const genDayOfWeekLastNTHDayWeek = () => (
+    <div className={genClassName(classPrefix, ['form-group', 'form-inline'], ['c-last-nth', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-last-nth-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-last-nth-option'])}
+          type="radio"
+          id={genId(Mode.LAST_NTH_DAY_WEEK, session, Segment.dayOfWeek)}
+          value={Mode.LAST_NTH_DAY_WEEK}
+          checked={api.isDayOfWeekLastNTHDayWeekSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfWeekLastNTHDayWeek()} />
 
         <label
-          className="c-nearest-option-label2"
-          htmlFor={this.genId(Mode.NEAREST_WEEKDAY_OF_MONTH, Segment.dayOfMonth)}>
-          {this.props.localization.quartz.day.dayOfMonthNearestWeekDayOfMonth.label2}
+          className={genClassName(classPrefix, ['form-check-label'], ['c-last-nth-option-label'])}
+          htmlFor={genId(Mode.LAST_NTH_DAY_WEEK, session, Segment.dayOfWeek)}>
+
+          {dayOfWeekLastNTHDayWeek.label1}
         </label>
       </div>
-    );
-  }
 
-  private genDayOfWeekNTHWeekDayOfMonth() {
-    return (
-      <div className={genClassName(this.props.cssClassPrefix, ['form-group', 'form-inline'], ['c-nth', 'c-segment'])}>
-        <div className={genClassName(this.props.cssClassPrefix, ['form-check'], ['c-nth-check'])}>
-          <input
-            className={genClassName(this.props.cssClassPrefix, ['form-check-input'], ['c-nth-option'])}
-            type="radio"
-            id={this.genId(Mode.NTH_WEEKDAY_OF_MONTH, Segment.dayOfWeek)}
-            value={Mode.NTH_WEEKDAY_OF_MONTH}
-            checked={this.uiServiceApi.isDayOfWeekNTHWeekDayOfMonthSelected()}
-            disabled={this.uiService.isDisabled()}
-            onChange={() => this.uiServiceApi.selectDayOfWeekNTHWeekDayOfMonth()} />
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-last-nth-weekday'])}
+        disabled={api.isDayOfWeekLastNTHDayWeekControlsDisabled()}
+        value={api.getDayOfWeekLastNTHDayWeekValue()}
+        onChange={(e) => api.setDayOfWeekLastNTHDayWeekValue(e.target.value)}>
 
-          <label
-            className={genClassName(this.props.cssClassPrefix, ['form-check-label'], ['c-nth-option-label'])}
-            htmlFor={this.genId(Mode.NTH_WEEKDAY_OF_MONTH, Segment.dayOfWeek)}>
-            {this.props.localization.quartz.day.dayOfWeekNTHWeekDayOfMonth.label1}
-          </label>
-        </div>
+        {daysOfWeek.map(item => {
+          return (
+            <option
+              value={item.value + 'L'}
+              key={item.value + 'L'}>
+              {localizeLabel(item.label, common.dayOfWeek)}
+            </option>
+          );
+        })}
+      </select>
 
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-nth-every'])}
-          disabled={this.uiServiceApi.isDayOfWeekNTHWeekDayOfMonthControlsDisabled()}
-          value={this.uiServiceApi.getDayOfWeekNTHWeekDayOfMonthPrimaryValue()}
-          onChange={(e) => this.uiServiceApi.setDayOfWeekNTHWeekDayOfMonthPrimaryValue(e.target.value)}>
+      <label
+        className="c-last-nth-option-label2"
+        htmlFor={genId(Mode.LAST_NTH_DAY_WEEK, session, Segment.dayOfWeek)}>
+        {dayOfWeekLastNTHDayWeek.label2}
+      </label>
+    </div>
+  );
 
-          {this.limitedDaysOfMonth.map(item => {
-            return (
-              <option
-                value={item.value}
-                key={item.value}>
-                {this.localizeLabel(item.label, this.props.localization.common.dayOfMonth)}
-              </option>
-            );
-          })}
-        </select>
+  const genDayOfMonthDaysBeforeEndMonth = () => (
+    <div className={genClassName(classPrefix, ['form-group', 'form-inline'], ['c-day-before-end', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-day-before-end-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-day-before-end-option'])}
+          type="radio"
+          id={genId(Mode.DAYS_BEFORE_END_MONTH, session, Segment.dayOfMonth)}
+          value={Mode.DAYS_BEFORE_END_MONTH}
+          checked={api.isDayOfMonthDaysBeforeEndMonthSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfMonthDaysBeforeEndMonth()} />
+      </div>
 
-        <select
-          className={genClassName(this.props.cssClassPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-nth-every-weekday'])}
-          disabled={this.uiServiceApi.isDayOfWeekNTHWeekDayOfMonthControlsDisabled()}
-          value={this.uiServiceApi.getDayOfWeekNTHWeekDayOfMonthSecondaryValue()}
-          onChange={(e) => this.uiServiceApi.setDayOfWeekNTHWeekDayOfMonthSecondaryValue(e.target.value)}>
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-day-before-end-monthday'])}
+        disabled={api.isDayOfMonthDaysBeforeEndMonthControlsDisabled()}
+        value={api.getDayOfMonthDaysBeforeEndMonthValue()}
+        onChange={(e) => api.setDayOfMonthDaysBeforeEndMonthValue(e.target.value)}>
 
-          {this.daysOfWeek.map(item => {
-            return (
-              <option
-                key={item.value}
-                value={item.value}>
-                {this.localizeLabel(item.label, this.props.localization.common.dayOfWeek)}
-              </option>
-            );
-          })}
-        </select>
+        {daysOfMonth.map(item => {
+          return (
+            <option
+              value={'L-' + item.value}
+              key={'L-' + item.value}>
+              {item.label}
+            </option>
+          );
+        })}
+      </select>
+
+      <label
+        className="c-day-before-end-option-label"
+        htmlFor={genId(Mode.DAYS_BEFORE_END_MONTH, session, Segment.dayOfMonth)}>
+        {dayOfMonthDaysBeforeEndMonth.label}
+      </label>
+    </div>
+  );
+
+  const genDayOfMonthNearestWeekDayOfMonth = () => (
+    <div className={genClassName(classPrefix, ['form-group', 'form-inline'], ['c-nearest', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-nearest-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-nearest-option'])}
+          type="radio"
+          id={genId(Mode.NEAREST_WEEKDAY_OF_MONTH, session, Segment.dayOfMonth)}
+          value={Mode.NEAREST_WEEKDAY_OF_MONTH}
+          checked={api.isDayOfMonthNearestWeekDayOfMonthSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfMonthNearestWeekDayOfMonth()} />
 
         <label
-          className="c-nth-option-label2"
-          htmlFor={this.genId(Mode.NTH_WEEKDAY_OF_MONTH, Segment.dayOfWeek)}>
-          {this.props.localization.quartz.day.dayOfWeekNTHWeekDayOfMonth.label2}
+          className={genClassName(classPrefix, ['form-check-label'], ['c-nearest-option-label'])}
+          htmlFor={genId(Mode.NEAREST_WEEKDAY_OF_MONTH, session, Segment.dayOfMonth)}>
+          {dayOfMonthNearestWeekDayOfMonth.label1}
         </label>
       </div>
-    );
-  }
+
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-nearest-monthday'])}
+        disabled={api.isDayOfMonthNearestWeekDayOfMonthControlsDisabled()}
+        value={api.getDayOfMonthNearestWeekDayOfMonthValue()}
+        onChange={(e) => api.setDayOfMonthNearestWeekDayOfMonthValue(e.target.value)}>
+
+        {daysOfMonthEvery.map(item => {
+          return (
+            <option
+              key={item.value + 'W'}
+              value={item.value + 'W'}>
+              {localizeLabel(item.label, common.dayOfMonth)}
+            </option>
+          );
+        })}
+      </select>
+
+      <label
+        className="c-nearest-option-label2"
+        htmlFor={genId(Mode.NEAREST_WEEKDAY_OF_MONTH, session, Segment.dayOfMonth)}>
+        {dayOfMonthNearestWeekDayOfMonth.label2}
+      </label>
+    </div>
+  );
+
+  const genDayOfWeekNTHWeekDayOfMonth = () => (
+    <div className={genClassName(classPrefix, ['form-group', 'form-inline'], ['c-nth', 'c-segment'])}>
+      <div className={genClassName(classPrefix, ['form-check'], ['c-nth-check'])}>
+        <input
+          className={genClassName(classPrefix, ['form-check-input'], ['c-nth-option'])}
+          type="radio"
+          id={genId(Mode.NTH_WEEKDAY_OF_MONTH, session, Segment.dayOfWeek)}
+          value={Mode.NTH_WEEKDAY_OF_MONTH}
+          checked={api.isDayOfWeekNTHWeekDayOfMonthSelected()}
+          disabled={service.isDisabled()}
+          onChange={() => api.selectDayOfWeekNTHWeekDayOfMonth()} />
+
+        <label
+          className={genClassName(classPrefix, ['form-check-label'], ['c-nth-option-label'])}
+          htmlFor={genId(Mode.NTH_WEEKDAY_OF_MONTH, session, Segment.dayOfWeek)}>
+          {dayOfWeekNTHWeekDayOfMonth.label1}
+        </label>
+      </div>
+
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-nth-every'])}
+        disabled={api.isDayOfWeekNTHWeekDayOfMonthControlsDisabled()}
+        value={api.getDayOfWeekNTHWeekDayOfMonthPrimaryValue()}
+        onChange={(e) => api.setDayOfWeekNTHWeekDayOfMonthPrimaryValue(e.target.value)}>
+
+        {limitedDaysOfMonth.map(item => {
+          return (
+            <option
+              value={item.value}
+              key={item.value}>
+              {localizeLabel(item.label, common.dayOfMonth)}
+            </option>
+          );
+        })}
+      </select>
+
+      <select
+        className={genClassName(classPrefix, ['form-control', 'form-control-sm', 'mx-1'], ['c-nth-every-weekday'])}
+        disabled={api.isDayOfWeekNTHWeekDayOfMonthControlsDisabled()}
+        value={api.getDayOfWeekNTHWeekDayOfMonthSecondaryValue()}
+        onChange={(e) => api.setDayOfWeekNTHWeekDayOfMonthSecondaryValue(e.target.value)}>
+
+        {daysOfWeek.map(item => {
+          return (
+            <option
+              key={item.value}
+              value={item.value}>
+              {localizeLabel(item.label, common.dayOfWeek)}
+            </option>
+          );
+        })}
+      </select>
+
+      <label
+        className="c-nth-option-label2"
+        htmlFor={genId(Mode.NTH_WEEKDAY_OF_MONTH, session, Segment.dayOfWeek)}>
+        {dayOfWeekNTHWeekDayOfMonth.label2}
+      </label>
+    </div>
+  );
+
+  return (
+    <div>
+      {genEvery()}
+      {genDayOfWeekIncrement()}
+      {genDayOfMonthIncrement()}
+      {genDayOfWeekAnd()}
+      {getDayOfWeekRange()}
+      {genDayOfMonthAnd()}
+      {genDayOfMonthLastDay()}
+      {genDayOfMonthLastDayWeek()}
+      {genDayOfWeekLastNTHDayWeek()}
+      {genDayOfMonthDaysBeforeEndMonth()}
+      {genDayOfMonthNearestWeekDayOfMonth()}
+      {genDayOfWeekNTHWeekDayOfMonth()}
+    </div>
+  );
 }
