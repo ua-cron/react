@@ -13,15 +13,17 @@
   },
   "scripts": {
     "build": "npm run clean && tsc && node prepare-package.mjs",
+    "build-alpha": "ALPHA=1 npm run build",
     "clean": "rm -rf dist",
     "test-debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "test": "jest",
     "lint": "eslint . --ext .ts --ext .tsx",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "e2e": "npm run build && npm run e2e-inject && npx cypress open --component",
     "e2e-inject": "npm install ./dist --force",
-    "e2e-run": "npm run build && npm run e2e-inject && npx cypress run --component"
+    "e2e": "npm run build && npm run e2e-inject && npx cypress open --component",
+    "e2e-run": "npm run build && npm run e2e-inject && npx cypress run --component",
+    "publish-alpha": "npm publish ./dist --tag alpha --access=public"
   },
   "dependencies": {
     "@sbzen/cron-core": "2.0.0-alpha.1660480017312"

@@ -1,7 +1,9 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { env } from 'node:process';
 
+const isAlpha = env.ALPHA;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distLibPath = resolve(__dirname, './dist');
 const packagePath = resolve(__dirname, './package.json');
@@ -19,9 +21,11 @@ const {
   bugs
 } = JSON.parse(packageString);
 
+const nextVersion = isAlpha ? `${version}-alpha.${Date.now()}` : version;
+
 const libPackage = JSON.stringify({
   name,
-  version,
+  version: nextVersion,
   author,
   license,
   repository,

@@ -1,4 +1,4 @@
-name: Validation
+name: Alpha
 
 on: [push]
 
@@ -46,12 +46,16 @@ jobs:
       if: always() # always run even if the previous step fails
       with:
         report_paths: 'e2e-results/**/*.xml'
+    - name: Build Dist
+      run: npm run build-alpha
+      env:
+        CI: true
     - name: Npm Configuration
       run: npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
       env:
         CI: true
         NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-    # - name: Publish Cron Core
-    #   run: npm run publish-alpha
-    #   env:
-    #     CI: true
+    - name: Publish Cron Core
+      run: npm run publish-alpha
+      env:
+        CI: true
