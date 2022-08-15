@@ -5,7 +5,7 @@
 [React](https://reactjs.org/) cron widget built from the ground up using only [Bootstrap 4](https://getbootstrap.com/) CSS.
 
 Please check our [demo & documentation](https://bzenkosergey.github.io/ng-cron/react/) and the list of
-[issues](https://github.com/bzenkosergey/ng-cron/issues) to see all the things we are working on. Feel free to make comments there.
+[issues](https://github.com/ua-cron/react/issues) to see all the things we are working on. Feel free to make comments there.
 
 <p align="center">
 	<a href="https://bzenkosergey.github.io/ng-cron/react/">
@@ -44,7 +44,7 @@ npm install --save @sbzen/re-cron
 ## Display the cron component
 Import and add the cron component into your jsx/tsx.
 
-```
+```tsx
 import React, { useState } from 'react';
 import { ReQuartzCron } from '@sbzen/re-cron';
 
@@ -65,7 +65,6 @@ Main source of API documentation and usage scenarios available here: https://bze
 
 
 ## Compatibility
-
 The only two required dependencies are React and cron-core.
 The Bootstrap CSS is optional as you can use this component with your own styling.
 Here is the versions compatibility list:
