@@ -21,7 +21,7 @@
     "build-storybook": "build-storybook",
     "e2e": "npm run build && npm run e2e-inject && npx cypress open --component",
     "e2e-inject": "npm install ./dist --force",
-    "e2e-run": "npx cypress run --component"
+    "e2e-run": "npm run build && npm run e2e-inject && npx cypress run --component"
   },
   "dependencies": {
     "@sbzen/cron-core": "2.0.0-alpha.1660480017312"
