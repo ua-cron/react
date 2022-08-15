@@ -1,0 +1,57 @@
+name: Validation
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.16.0]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Get npm cache directory
+      id: npm-cache-dir
+      run: |
+        echo "::set-output name=dir::$(npm config get cache)"
+    - name: Cache node modules
+      uses: actions/cache@v3
+      id: npm-cache
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Install Dependencies
+      run: npm ci --force
+      env:
+        CI: true
+    - name: Linting
+      run: npm run lint
+      env:
+        CI: true
+    - name: Units Testing
+      run: npm run e2e-run
+      env:
+        CI: true
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v3
+      if: always() # always run even if the previous step fails
+      with:
+        report_paths: 'e2e-results/**/*.xml'
+    - name: Npm Configuration
+      run: npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
+      env:
+        CI: true
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+    # - name: Publish Cron Core
+    #   run: npm run publish-alpha
+    #   env:
+    #     CI: true

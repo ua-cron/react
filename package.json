@@ -18,10 +18,13 @@
     "test": "jest",
     "lint": "eslint . --ext .ts --ext .tsx",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "e2e": "npm run build && npm run e2e-inject && npx cypress open --component",
+    "e2e-inject": "npm install ./dist --force",
+    "e2e-run": "npx cypress run --component"
   },
   "dependencies": {
-    "@sbzen/cron-core": "file:/Users/serhiibzenko/Projects/ua-cron/core/dist"
+    "@sbzen/cron-core": "2.0.0-alpha.1660480017312"
   },
   "peerDependencies": {
     "react": "^18.2.0",
@@ -30,13 +33,15 @@
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
-    "@storybook/addon-actions": "^6.5.9",
-    "@storybook/addon-essentials": "^6.5.9",
-    "@storybook/addon-interactions": "^6.5.9",
-    "@storybook/addon-links": "^6.5.9",
-    "@storybook/builder-webpack4": "^6.5.9",
-    "@storybook/manager-webpack4": "^6.5.9",
-    "@storybook/react": "^6.5.9",
+    "@cypress/react": "^6.1.0",
+    "@sbzen/e2e": "https://github.com/ua-cron/e2e/releases/download/20220815171625/dist.tar.gz",
+    "@storybook/addon-actions": "^6.5.10",
+    "@storybook/addon-essentials": "^6.5.10",
+    "@storybook/addon-interactions": "^6.5.10",
+    "@storybook/addon-links": "^6.5.10",
+    "@storybook/builder-webpack4": "^6.5.10",
+    "@storybook/manager-webpack4": "^6.5.10",
+    "@storybook/react": "^6.5.10",
     "@storybook/testing-library": "0.0.13",
     "@types/jest": "^27.5.1",
     "@types/lodash": "^4.14.182",
@@ -49,6 +54,7 @@
     "eslint": "^8.18.0",
     "jest": "^28.1.0",
     "lodash": "^4.17.21",
+    "react-scripts": "^5.0.1",
     "sass": "^1.53.0",
     "storybook-addon-sass-postcss": "^0.1.3",
     "ts-jest": "^28.0.2",

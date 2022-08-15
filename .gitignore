@@ -1,3 +1,5 @@
 node_modules
 dist
 storybook-static
+e2e-results
+cypress/videos

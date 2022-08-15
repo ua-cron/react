@@ -16,7 +16,10 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@sbzen/re-cron": ["./dist"]
+    }
   },
   "exclude": ["node_modules", "dist"]
 }
