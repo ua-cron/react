@@ -37,7 +37,8 @@ const libPackage = JSON.stringify({
   peerDependencies,
   sideEffects,
   bugs,
-  main: 'index.js'
+  main: 'index.js',
+  types: 'index.d.ts'
 }, null, '  ');
 
 writeFileSync(resolve(distLibPath, './package.json'), libPackage);

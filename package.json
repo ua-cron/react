@@ -34,10 +34,11 @@
     "e2e-inject": "npm install ./dist --force",
     "e2e": "npm run build && npm run e2e-inject && npx cypress open --component",
     "e2e-run": "npm run build && npm run e2e-inject && npx cypress run --component",
-    "publish-alpha": "npm publish ./dist --tag alpha --access=public"
+    "publish-alpha": "npm publish ./dist --tag alpha --access=public",
+    "publish": "npm publish ./dist"
   },
   "dependencies": {
-    "@sbzen/cron-core": "2.0.0-alpha.1660686985235"
+    "@sbzen/cron-core": "2.0.0"
   },
   "peerDependencies": {
     "react": "*",
