@@ -13,7 +13,7 @@ type Props = {
     value: string
   }[],
   label: string;
-  gridSize?: string;
+  gridSize?: string[];
 } & SharedProps;
 
 export const SimpleAnd = ({
@@ -26,7 +26,7 @@ export const SimpleAnd = ({
   onSelect,
   onValueChange,
   isValueSelected,
-  gridSize = 'col-2 col-md-1',
+  gridSize = ['col-2', 'col-md-1'],
   segmentId
 }: Props) => (
   <div className={genClassName(cssClassPrefix, ['form-group'], ['c-and', 'c-segment'])}>
@@ -51,7 +51,7 @@ export const SimpleAnd = ({
       {options.map(item => {
         return (
           <div
-            className={genClassName(cssClassPrefix, [gridSize], ['c-and-item'])}
+            className={genClassName(cssClassPrefix, gridSize, ['c-and-item'])}
             item-value={item.value}
             key={item.value}>
 

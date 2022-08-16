@@ -158,7 +158,7 @@ export const UnixCronDay = ({
         {daysOfWeekCodes.map(item => {
           return (
             <div
-              className={genClassName(classPrefix, ['col-3 col-md-2'], ['c-and-weekday-item'])}
+              className={genClassName(classPrefix, ['col-3', 'col-md-2'], ['c-and-weekday-item'])}
               item-value={item.value}
               key={item.value}>
 
@@ -208,7 +208,7 @@ export const UnixCronDay = ({
         {daysOfMonth.map(item => {
           return (
             <div
-              className={genClassName(classPrefix, ['col-2 col-md-1'], ['c-and-monthday-item'])}
+              className={genClassName(classPrefix, ['col-2', 'col-md-1'], ['c-and-monthday-item'])}
               item-value={item.value}
               key={item.value}>
 

@@ -46,7 +46,7 @@ export const UnixCronMonth = ({
   const genAnd = () => (
     <SimpleAnd
       cssClassPrefix={classPrefix}
-      gridSize="col-3 col-md-2"
+      gridSize={['col-3', 'col-md-2']}
       segmentId={genId(Mode.AND, session)}
       checked={api.isAndSelected()}
       disabled={service.isDisabled()}
