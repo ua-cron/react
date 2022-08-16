@@ -37,7 +37,7 @@
     "publish-alpha": "npm publish ./dist --tag alpha --access=public"
   },
   "dependencies": {
-    "@sbzen/cron-core": "2.0.0-alpha.1660480017312"
+    "@sbzen/cron-core": "2.0.0-alpha.1660686985235"
   },
   "peerDependencies": {
     "react": "*",
