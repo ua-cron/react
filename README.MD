@@ -4,15 +4,15 @@
 
 [React](https://reactjs.org/) cron widget built from the ground up using only [Bootstrap 4](https://getbootstrap.com/) CSS.
 
-Please check our [demo & documentation](https://bzenkosergey.github.io/ng-cron/react/) and the list of
+Please check our [demo & documentation](https://recron.emptyui.com/) and the list of
 [issues](https://github.com/ua-cron/react/issues) to see all the things we are working on. Feel free to make comments there.
 
 <p align="center">
-	<a href="https://bzenkosergey.github.io/ng-cron/react/">
+	<a href="https://recron.emptyui.com/">
 		<img
 			width="200"
 			src="https://bzenkosergey.github.io/ng-cron/react/assets/logo.png"
-			alt="re-cron">
+			alt="Quartz/Unix Cron Component - React">
 	</a>
 </p>
 
@@ -61,7 +61,7 @@ export default App;
 ```
 
 ## Usage & Demo
-Main source of API documentation and usage scenarios available here: https://bzenkosergey.github.io/ng-cron/react/.
+Main source of API documentation and usage scenarios available here: https://recron.emptyui.com/.
 
 
 ## Compatibility
@@ -72,3 +72,4 @@ Here is the versions compatibility list:
 | Re Cron          |    React    |  Bootstrap CSS |
 | -------------    | ------------- | -------------- |
 | 0.0.1            | 16.x.x         | 4.x.x          |
+| 2.0.0            | 17.x.x         | 4.x.x          |

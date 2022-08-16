@@ -1,15 +1,26 @@
 {
   "name": "@sbzen/re-cron",
   "version": "2.0.0",
+  "description": "Quartz Cron Component - React",
   "author": "Serhii Bzenko <bzenkosergey@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ua-cron/core.git"
+    "url": "git+ssh://git@github.com/ua-cron/react.git"
   },
+  "keywords": [
+    "react",
+    "bootstap",
+    "cron",
+    "quartz",
+    "cron builder",
+    "cron generator",
+    "quartz cron"
+  ],
+  "homepage": "https://recron.emptyui.com",
   "sideEffects": false,
   "bugs": {
-    "url": "https://github.com/ua-cron/core/issues"
+    "url": "https://github.com/ua-cron/react/issues"
   },
   "scripts": {
     "build": "npm run clean && tsc && node prepare-package.mjs",
@@ -29,8 +40,8 @@
     "@sbzen/cron-core": "2.0.0-alpha.1660480017312"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "*",
+    "react-dom": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
