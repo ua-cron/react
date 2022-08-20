@@ -10,7 +10,7 @@ export const genClassName = (cssClassPrefix = '', classes: string[], noPrefixCla
 };
 
 export const genId = (mode: Mode, session: string, extra?: string) => {
-  return `${mode}-${extra}${session}`;
+  return `${mode}-${extra || ''}${session}`;
 };
 
 export const getCssClassPrefix = (cssClassPrefix?: string) => cssClassPrefix || '';
