@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment, Mode, Type, getDaysOfWeekCodes, getList } from '@sbzen/cron-core';
 
-import { genId, getCssClassPrefix, localizeLabel, genClassName } from './../../../helpers';
+import { genId, getCssClassPrefix, localizeLabel, genClassName, localizeList } from './../../../helpers';
 import { SimpleRange } from './../../../shared';
 import { CronQuartzTabProps } from './../shared';
 
@@ -246,10 +246,10 @@ export const QuartzCronDay = ({
       disabledControls={api.isDayOfWeekRangeControlsDisabled()}
       label1={dayOfWeekRange.label1}
       label2={dayOfWeekRange.label2}
-      primaryOptions={daysOfWeekCodes}
+      primaryOptions={localizeList(daysOfWeekCodes, common.dayOfWeek)}
       primaryValue={api.getDayOfWeekRangePrimary()}
       onPrimaryValueChange={api.setDayOfWeekRangePrimary}
-      secondaryOptions={daysOfWeekCodes}
+      secondaryOptions={localizeList(daysOfWeekCodes, common.dayOfWeek)}
       secondaryValue={api.getDayOfWeekRangeSecondary()}
       onSecondaryValueChange={api.setDayOfWeekRangeSecondary}/>
   );

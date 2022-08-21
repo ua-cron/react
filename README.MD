@@ -11,7 +11,7 @@ Please check our [demo & documentation](https://recron.emptyui.com) and the list
 	<a href="https://recron.emptyui.com">
 		<img
 			width="200"
-			src="https://bzenkosergey.github.io/ng-cron/react/assets/logo.png"
+			src="https://res.cloudinary.com/dwkakr4wt/image/upload/v1661086527/cron/recron.png"
 			alt="Quartz/Unix Cron Component - React">
 	</a>
 </p>
