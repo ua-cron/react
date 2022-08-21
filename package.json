@@ -1,6 +1,6 @@
 {
   "name": "@sbzen/re-cron",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Quartz Cron Component - React",
   "author": "Serhii Bzenko <bzenkosergey@gmail.com>",
   "license": "MIT",
@@ -39,7 +39,7 @@
     "publish": "npm publish ./dist"
   },
   "dependencies": {
-    "@sbzen/cron-core": "2.0.0"
+    "@sbzen/cron-core": "2.0.1"
   },
   "peerDependencies": {
     "react": "*",
@@ -49,7 +49,7 @@
     "@babel/core": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@cypress/react": "^6.1.0",
-    "@sbzen/e2e": "https://github.com/ua-cron/e2e/releases/download/20220821205049/dist.tar.gz",
+    "@sbzen/e2e": "https://github.com/ua-cron/e2e/releases/download/20220822040446/dist.tar.gz",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
