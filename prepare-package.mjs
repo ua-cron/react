@@ -24,6 +24,15 @@ const {
 } = JSON.parse(packageString);
 
 const nextVersion = isAlpha ? `${version}-alpha.${Date.now()}` : version;
+const nextDependencies = Object.keys(dependencies).reduce((acc, prop) => {
+  if (prop === name) {
+    return acc;
+  }
+  return {
+    ...acc,
+    [prop]: dependencies[prop]
+  }
+}, {});
 
 const libPackage = JSON.stringify({
   name,
@@ -33,7 +42,7 @@ const libPackage = JSON.stringify({
   keywords,
   repository,
   homepage,
-  dependencies,
+  dependencies: nextDependencies,
   peerDependencies,
   sideEffects,
   bugs,
