@@ -5,7 +5,7 @@ import { DeepPartial, localization, CronLocalization } from './cron-localization
 export const genSessionId = () => `${Date.now()}_${Math.random()}`;
 
 export const genClassName = (cssClassPrefix = '', classes: string[], noPrefixClasses: string[] = []) => {
-  const prefixed = classes.map(c => cssClassPrefix + c);
+  const prefixed = classes.filter(c => !!c).map(c => cssClassPrefix + c);
   return prefixed.concat(noPrefixClasses).join(' ');
 };
 
