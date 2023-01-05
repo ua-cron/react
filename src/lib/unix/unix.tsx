@@ -94,21 +94,23 @@ export const ReUnixCron = ({
   const genTab = (tab: UnixType, activeTab: UnixType) => {
     const { tabs: tabsLocalization } = localization;
     const isActive = activeTab === tab;
-    const className = genClassName(cssClassPrefix, ['nav-link'], [tab, 'c-tab', isActive ? 'active': '']);
+    const className = genClassName(cssClassPrefix, ['nav-link', isActive ? 'active': ''], [tab, 'c-tab']);
     const tabKey = tab.toLowerCase() as keyof typeof tabsLocalization;
 
     return (
-      <button
-        key={tab}
-        role="tab"
-        type="button"
-        className={className}
-        aria-selected={isActive}
-        tabIndex={isActive ? 0 : -1}
-        onClick={() => changeTab(tab)}>
+      <li className={genClassName(cssClassPrefix, ['nav-item'], ['c-tab-item'])}>
+        <button
+          key={tab}
+          role="tab"
+          type="button"
+          className={className}
+          aria-selected={isActive}
+          tabIndex={isActive ? 0 : -1}
+          onClick={() => changeTab(tab)}>
 
-        {tabsLocalization[tabKey]}
-      </button>
+          {tabsLocalization[tabKey]}
+        </button>
+      </li>
     );
   };
 

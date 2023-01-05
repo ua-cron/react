@@ -44,5 +44,5 @@ export default {
 const Template: Story<ReUnixCronProps> = args => <Wrapper {...args} />;
 export const Default = Template.bind({});
 Default.args = {
-  value: '0 40 7 ? * MON-FRI *'
+  value: '0 0 1 2,4 *'
 };
