@@ -106,7 +106,10 @@ export const ReQuartzCron = ({
     const tabKey = tab.toLowerCase() as keyof typeof tabsLocalization;
 
     return (
-      <li key={tab} className={genClassName(cssClassPrefix, ['nav-item'], ['c-tab-item'])}>
+      <li
+        key={tab}
+        className={genClassName(cssClassPrefix, ['nav-item'], ['c-tab-item'])}>
+
         <button
           role="tab"
           type="button"
