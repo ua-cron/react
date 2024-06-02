@@ -49,7 +49,7 @@
     "@babel/core": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@cypress/react": "^6.1.0",
-    "@sbzen/e2e": "https://github.com/ua-cron/e2e/releases/download/20230106035216/dist.tar.gz",
+    "@sbzen/e2e": "https://github.com/ua-cron/e2e/releases/download/20240602212421/dist.tar.gz",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
